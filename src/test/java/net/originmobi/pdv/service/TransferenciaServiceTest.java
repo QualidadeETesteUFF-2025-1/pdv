@@ -34,7 +34,6 @@ public class TransferenciaServiceTest {
 
     @Before
     public void setUp() {
-        // Nada adicional necessário aqui
     }
 
 @Test
@@ -57,10 +56,8 @@ public void testCadastrarComSucesso() {
     destino.setData_fechamento(null);
 
     Aplicacao instancia = mock(Aplicacao.class);
-    when(instancia.getUsuarioAtual()).thenReturn("admin");
     mockAplicacaoSingleton(instancia);
 
-    when(usuarios.buscaUsuario("admin")).thenReturn(usuario);
     when(caixas.busca(origemId)).thenReturn(Optional.of(origem));
     when(caixas.busca(destinoId)).thenReturn(Optional.of(destino));
 
@@ -69,7 +66,6 @@ public void testCadastrarComSucesso() {
     assertEquals("Transferência realizada com sucesso", resultado);
     verify(transferencias).save(any(Transferencia.class));
 }
-
 
     @Test(expected = RuntimeException.class)
     public void testDestinoIgualOrigem() {
@@ -84,8 +80,6 @@ public void testCadastrarComSucesso() {
         origem.setData_fechamento(new Timestamp(System.currentTimeMillis()));
         Caixa destino = new Caixa();
 
-        when(caixas.busca(1L)).thenReturn(Optional.of(origem));
-        when(caixas.busca(2L)).thenReturn(Optional.of(destino));
         transferenciaService.cadastrar(100.0, 1L, 2L, "Obs");
     }
 
@@ -118,22 +112,17 @@ public void testCadastrarComSucesso() {
         destino.setData_fechamento(null);
 
         Aplicacao instancia = mock(Aplicacao.class);
-        when(instancia.getUsuarioAtual()).thenReturn("admin");
         mockAplicacaoSingleton(instancia);
 
-        when(usuarios.buscaUsuario("admin")).thenReturn(usuario);
         when(caixas.busca(origemId)).thenReturn(Optional.of(origem));
         when(caixas.busca(destinoId)).thenReturn(Optional.of(destino));
-
-        doThrow(new RuntimeException("erro banco")).when(transferencias).save(any(Transferencia.class));
 
         transferenciaService.cadastrar(valor, origemId, destinoId, "Obs");
     }
 
-    // Workaround para simular o singleton da Aplicacao usando um "gancho estático"
     private void mockAplicacaoSingleton(Aplicacao instanciaMock) {
         try {
-            java.lang.reflect.Field instancia = Aplicacao.class.getDeclaredField("instancia");
+            java.lang.reflect.Field instancia = Aplicacao.class.getDeclaredField("aplicacao");
             instancia.setAccessible(true);
             instancia.set(null, instanciaMock);
         } catch (Exception e) {
