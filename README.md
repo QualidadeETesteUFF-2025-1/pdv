@@ -27,3 +27,9 @@ Para logar no sistema, use o usuário "gerente" e a senha "123".
 - Hibernate
 - FlyWay
 
+# Sonar
+
+1. Rode o comando `docker run -d --name sonarqube   -p 9000:9000   sonarqube:6.7` para subir o conteiner com o Sonar em [localhost:9000](http://localhost:9000/)
+
+2. Siga o tutorial para gerar um token e rode o comando apresentado em tela. 
+`mvn sonar:sonar   -Dsonar.host.url=http://localhost:9000   -Dsonar.login=<seu_token>`

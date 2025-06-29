@@ -32,6 +32,9 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
+		<sonar.projectKey>pdv</sonar.projectKey>
+		<sonar.projectName>PDV</sonar.projectName>
+		<sonar.jacoco.reportPaths>${project.basedir}/target/jacoco.exec</sonar.jacoco.reportPaths>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -147,6 +150,11 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.sonarsource.scanner.maven</groupId>
+				<artifactId>sonar-maven-plugin</artifactId>
+				<version>3.0.2</version>
 			</plugin>
 		</plugins>
 	</build>
