@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import net.originmobi.pdv.dto.EmpresaDTO;
 import net.originmobi.pdv.model.Cidade;
 import net.originmobi.pdv.model.RegimeTributario;
 import net.originmobi.pdv.model.TipoAmbiente;
@@ -48,32 +49,33 @@ public class EmpresaController {
 
 	@RequestMapping(method = RequestMethod.POST)
 	public String cadastra(@RequestParam Map<String, String> request, RedirectAttributes attributes) {
-		String strCodigo = request.get("codigo");
-		String nome = request.get("nome");
-		String nome_fantasia = request.get("nome_fantasia");
-		String cnpj = request.get("cnpj");
-		String ie = request.get("ie");
-		String vlSerie = request.get("parametro.serie_nfe");
-		Long codRegime = Long.decode(request.get("regime_tributario"));
+		EmpresaDTO empresaDTO = new EmpresaDTO();
 
-		Long codcidade = Long.decode(request.get("endereco.cidade"));
+		String strCodigo = request.get("codigo");
+		empresaDTO.setNome(request.get("nome"));
+		empresaDTO.setNomeFantasia(request.get("nome_fantasia"));
+		empresaDTO.setCnpj(request.get("cnpj"));
+		empresaDTO.setIe(request.get("ie"));
+		String vlSerie = request.get("parametro.serie_nfe");
+		empresaDTO.setCodRegime(Long.decode(request.get("regime_tributario")));
+
+		empresaDTO.setCodCidade(Long.decode(request.get("endereco.cidade")));
 		String strCodEnde = request.get("endereco.codigo");
-		String rua = request.get("endereco.rua");
-		String bairro = request.get("endereco.bairro");
-		String numero = request.get("endereco.numero");
-		String cep = request.get("endereco.cep");
-		String referencia = request.get("endereco.referencia");
+		empresaDTO.setRua(request.get("endereco.rua"));
+		empresaDTO.setBairro(request.get("endereco.bairro"));
+		empresaDTO.setNumero(request.get("endereco.numero"));
+		empresaDTO.setCep(request.get("endereco.cep"));
+		empresaDTO.setReferencia(request.get("endereco.referencia"));
 		String tipoAmbiente = request.get("parametro.ambiente");
 		String aliqCred = request.get("parametro.pCredSN").replace(",", ".");
 
-		int ambiente = tipoAmbiente.isEmpty() ? null : Integer.parseInt(tipoAmbiente);
-		int serie = vlSerie.isEmpty() ? 0 : Integer.parseInt(vlSerie);
-		Long codigo = strCodigo.isEmpty() ? null : Long.decode(strCodigo);
-		Long codendereco = strCodEnde.isEmpty() ? null : Long.decode(strCodEnde);
-		Double aliqCalcCredito = aliqCred.isEmpty() ? 0.0 : Double.valueOf(aliqCred); 
+		empresaDTO.setAmbiente(tipoAmbiente.isEmpty() ? null : Integer.parseInt(tipoAmbiente));
+		empresaDTO.setSerie(vlSerie.isEmpty() ? 0 : Integer.parseInt(vlSerie));
+		empresaDTO.setCodigo(strCodigo.isEmpty() ? null : Long.decode(strCodigo));
+		empresaDTO.setCodEndereco(strCodEnde.isEmpty() ? null : Long.decode(strCodEnde));
+		empresaDTO.setAliqCalcCredito(aliqCred.isEmpty() ? 0.0 : Double.valueOf(aliqCred)); 
 
-		String mensagem = empresas.merger(codigo, nome, nome_fantasia, cnpj, ie, serie, ambiente, codRegime, codendereco,
-				codcidade, rua, bairro, numero, cep, referencia, aliqCalcCredito);
+		String mensagem = empresas.merger(empresaDTO);
 		attributes.addFlashAttribute("mensagem", mensagem);
 
 		return "redirect:/empresa";
