@@ -35,7 +35,7 @@ public class GrupoUsuarioService {
 				attributes.addFlashAttribute("mensagem", "Grupo adicionado com sucesso");
 				grupousuarios.save(grupoUsuario);
 			} catch (Exception e) {
-				System.out.println(e);
+				attributes.addFlashAttribute("mensagemErro", "Erro ao adicionar grupo.");
 			}
 
 		} else {
@@ -57,7 +57,7 @@ public class GrupoUsuarioService {
 		try {
 			grupousuarios.deleteById(codigo);
 		} catch (Exception e) {
-			System.out.println(e);
+			attributes.addFlashAttribute("mensagemErro", "Erro ao deletar usuario.");
 		}
 
 		return "redirect:/grupousuario";
@@ -73,7 +73,6 @@ public class GrupoUsuarioService {
 		try {
 			grupousuarios.addPermissao(codgrupo, codpermissao);
 		} catch (Exception e) {
-			System.out.println(e);
 			throw new RuntimeException("Erro ao tentar adicionar permissão, chame o suporte");
 		}
 
