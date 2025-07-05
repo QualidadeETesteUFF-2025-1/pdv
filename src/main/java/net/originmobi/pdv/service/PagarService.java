@@ -56,6 +56,9 @@ public class PagarService {
 		obs = obs.isEmpty() ? tipo.getDescricao() : obs;
 
 		Optional<Fornecedor> OptionaFornecedor = fornecedores.busca(codFornecedor);
+		if (!OptionaFornecedor.isPresent()) {
+			throw new RuntimeException("Fornecedor não encontrado");
+		}
 		Fornecedor fornecedor = OptionaFornecedor.get();
 
 		Pagar pagar = new Pagar(obs, valor, dataAtual, fornecedor, tipo);
@@ -81,16 +84,19 @@ public class PagarService {
 	public String quitar(Long codparcela, Double vlPago, Double vldesc, Double vlacre, Long codCaixa) {
 
 		Optional<PagarParcela> parcela = pagarParcelaServ.busca(codparcela);
+		if (!parcela.isPresent()) {
+			throw new RuntimeException("Parcela não encontrada");
+		}
 
 		DecimalFormat df = new DecimalFormat("#0.00");
 
-		if (vlPago > Double.valueOf(df.format(parcela.map(PagarParcela::getValor_restante).get()).replace(",", ".")))
+		if (vlPago > Double.valueOf(df.format(parcela.get().getValor_restante()).replace(",", ".")))
 			throw new RuntimeException("Valor de pagamento inválido");
 
-		Double vlquitado = (vlPago + vlacre) + parcela.map(PagarParcela::getValor_pago).get();
-		Double vlRestante = (parcela.map(PagarParcela::getValor_restante).get() - (vlPago + vldesc));
-		Double vlDesconto = parcela.map(PagarParcela::getValor_desconto).get() + vldesc;
-		Double vlAcrescimo = parcela.map(PagarParcela::getValor_acrescimo).get() + vlacre;
+		Double vlquitado = (vlPago + vlacre) + parcela.get().getValor_pago();
+		Double vlRestante = (parcela.get().getValor_restante() - (vlPago + vldesc));
+		Double vlDesconto = parcela.get().getValor_desconto() + vldesc;
+		Double vlAcrescimo = parcela.get().getValor_acrescimo() + vlacre;
 
 		vlRestante = vlRestante < 0 ? 0.0 : vlRestante;
 
@@ -116,8 +122,11 @@ public class PagarService {
 
 		Usuario usuario = usuarios.buscaUsuario(aplicacao.getUsuarioAtual());
 		Optional<Caixa> caixa = caixas.busca(codCaixa);
+		if (!caixa.isPresent()) {
+			throw new RuntimeException("Caixa não encontrado");
+		}
 
-		if (vlPago + vlacre > caixa.map(Caixa::getValor_total).get())
+		if (vlPago + vlacre > caixa.get().getValor_total())
 			throw new RuntimeException("Saldo insuficiente para realizar este pagamento");
 
 		try {
