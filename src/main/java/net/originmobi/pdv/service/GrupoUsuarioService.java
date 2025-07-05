@@ -10,8 +10,14 @@ import net.originmobi.pdv.model.GrupoUsuario;
 import net.originmobi.pdv.model.Usuario;
 import net.originmobi.pdv.repository.GrupoUsuarioRepository;
 
+import net.originmobi.pdv.exceptions.GrupoUsuarioException;
+import net.originmobi.pdv.exceptions.PermissaoDuplicadaException;
+
+
 @Service
 public class GrupoUsuarioService {
+
+    private String mensagemErro = "mensagemErro";
 
 	@Autowired
 	private GrupoUsuarioRepository grupousuarios;
@@ -32,14 +38,14 @@ public class GrupoUsuarioService {
 
 		if (grupoUsuario.getCodigo() == null) {
 			try {
-				attributes.addFlashAttribute("mensagem", "Grupo adicionado com sucesso");
+				attributes.addFlashAttribute(mensagemErro, "Grupo adicionado com sucesso");
 				grupousuarios.save(grupoUsuario);
 			} catch (Exception e) {
-				attributes.addFlashAttribute("mensagemErro", "Erro ao adicionar grupo.");
+				attributes.addFlashAttribute(mensagemErro, "Erro ao adicionar grupo.");
 			}
 
 		} else {
-			attributes.addFlashAttribute("mensagem", "Grupo atualizado com sucesso");
+			attributes.addFlashAttribute(mensagemErro, "Grupo atualizado com sucesso");
 			grupousuarios.update(grupoUsuario.getNome(), grupoUsuario.getDescricao(), grupoUsuario.getCodigo());
 		}
 
@@ -50,14 +56,14 @@ public class GrupoUsuarioService {
 		int aux = grupousuarios.grupoTemUsuaio(codigo);
 
 		if (aux > 0) {
-			attributes.addFlashAttribute("mensagemErro", "Este grupo possue usuários vinculados a ele, verifique");
+			attributes.addFlashAttribute(mensagemErro, "Este grupo possue usuários vinculados a ele, verifique");
 			return "redirect:/grupousuario/" + codigo;
 		}
 
 		try {
 			grupousuarios.deleteById(codigo);
 		} catch (Exception e) {
-			attributes.addFlashAttribute("mensagemErro", "Erro ao deletar usuario.");
+			attributes.addFlashAttribute(mensagemErro, "Erro ao deletar usuario.");
 		}
 
 		return "redirect:/grupousuario";
@@ -68,12 +74,12 @@ public class GrupoUsuarioService {
 		int aux = grupousuarios.grupoTemPermissao(codgrupo, codpermissao);
 		
 		if (aux > 0)
-			throw new RuntimeException("Esta permissão já esta adicionada a este grupo");
+			throw new PermissaoDuplicadaException("Esta permissão já esta adicionada a este grupo");
 
 		try {
 			grupousuarios.addPermissao(codgrupo, codpermissao);
 		} catch (Exception e) {
-			throw new RuntimeException("Erro ao tentar adicionar permissão, chame o suporte");
+			throw new PermissaoDuplicadaException("Erro ao tentar adicionar permissão, chame o suporte");
 		}
 
 		return "Permissao adicionada com sucesso";
@@ -83,7 +89,7 @@ public class GrupoUsuarioService {
 		try {
 			grupousuarios.removePermissao(codigo, codgrupo);
 		} catch (Exception e) {
-			throw new RuntimeException("Erro ao tentar remover permissão, chame o suporte");
+			throw new GrupoUsuarioException("Erro ao tentar remover permissão, chame o suporte");
 		}
 		return "Permissão removida com sucesso";
 	}

@@ -31,6 +31,8 @@ public class GrupoUsuarioServiceTest {
 
     private GrupoUsuario grupo;
 
+    private String mensagemErro = "mensagemErro";
+
     @Before
     public void setUp() {
         grupo = new GrupoUsuario();
@@ -77,7 +79,7 @@ public class GrupoUsuarioServiceTest {
 
         service.merge(novoGrupo, redirectAttributes);
 
-        verify(redirectAttributes).addFlashAttribute("mensagem", "Grupo adicionado com sucesso");
+        verify(redirectAttributes).addFlashAttribute(mensagemErro, "Grupo adicionado com sucesso");
         verify(repository).save(novoGrupo);
     }
 
@@ -85,7 +87,7 @@ public class GrupoUsuarioServiceTest {
     public void testMergeGrupoExistente() {
         service.merge(grupo, redirectAttributes);
 
-        verify(redirectAttributes).addFlashAttribute("mensagem", "Grupo atualizado com sucesso");
+        verify(redirectAttributes).addFlashAttribute(mensagemErro, "Grupo atualizado com sucesso");
         verify(repository).update(grupo.getNome(), grupo.getDescricao(), grupo.getCodigo());
     }
 
@@ -95,7 +97,7 @@ public class GrupoUsuarioServiceTest {
 
         String resultado = service.remove(1L, redirectAttributes);
 
-        verify(redirectAttributes).addFlashAttribute("mensagemErro",
+        verify(redirectAttributes).addFlashAttribute(mensagemErro,
                 "Este grupo possue usuários vinculados a ele, verifique");
         assertEquals("redirect:/grupousuario/1", resultado);
     }
