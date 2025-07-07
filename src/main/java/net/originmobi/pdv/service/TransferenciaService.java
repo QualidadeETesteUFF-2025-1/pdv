@@ -42,12 +42,16 @@ public class TransferenciaService {
 		if (!caiDestino.isPresent() || caiDestino.map(Caixa::getData_fechamento).isPresent())
 			throw new RuntimeException("Conta destino não esta aberta, verifique");
 
-		if (caiOrigem.map(Caixa::getValor_total).get() < valor)
+		// Extract the Caixa objects after confirming they are present
+		Caixa caixaOrigem = caiOrigem.get();
+		Caixa caixaDestino = caiDestino.get();
+
+		if (caixaOrigem.getValor_total() < valor)
 			throw new RuntimeException("Saldo insuficiente para realizar a transferência");
 
-		Transferencia transferencia = new Transferencia(valor, dataAtual.dataAtualTimeStamp(), caiOrigem.get(),
-				caiDestino.get(), usuario, "Transferencia para o " + caiDestino.map(Caixa::getDescricao).get() + " "
-						+ caiDestino.map(Caixa::getCodigo).get());
+		Transferencia transferencia = new Transferencia(valor, dataAtual.dataAtualTimeStamp(), caixaOrigem,
+				caixaDestino, usuario, "Transferencia para o " + caixaDestino.getDescricao() + " "
+						+ caixaDestino.getCodigo());
 
 		try {
 			transferencias.save(transferencia);
