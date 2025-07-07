@@ -28,7 +28,7 @@ public class GrupoUsuarioServiceTest {
 
     @Mock
     private RedirectAttributes redirectAttributes;
-
+    
     private GrupoUsuario grupo;
 
     private String mensagemErro = "mensagemErro";
@@ -42,15 +42,44 @@ public class GrupoUsuarioServiceTest {
     }
 
     @Test
-    public void testBuscaGrupos() {
+    public void testBuscaGrupoComCodigoValido() {
+        when(repository.findByCodigoIn(1L)).thenReturn(grupo);
+    
+        GrupoUsuario resultado = service.buscaGrupo(1L);
+    
+        assertEquals("Admin", resultado.getNome());
+    }
+    
+    @Test
+    public void testBuscaGrupoComCodigoInexistente() {
+        when(repository.findByCodigoIn(99L)).thenReturn(null);
+    
+        GrupoUsuario resultado = service.buscaGrupo(99L);
+    
+        assertEquals(null, resultado);
+    }
+    
+
+    @Test
+    public void testBuscaGruposComUsuarioComGrupo() {
         Usuario usuario = new Usuario();
         when(repository.findByUsuarioIn(usuario)).thenReturn(Arrays.asList(grupo));
 
         List<GrupoUsuario> resultado = service.buscaGrupos(usuario);
 
         assertEquals(1, resultado.size());
-        verify(repository).findByUsuarioIn(usuario);
     }
+
+    @Test
+    public void testBuscaGruposComUsuarioSemGrupo() {
+        Usuario usuario = new Usuario();
+        when(repository.findByUsuarioIn(usuario)).thenReturn(Collections.emptyList());
+
+        List<GrupoUsuario> resultado = service.buscaGrupos(usuario);
+
+        assertEquals(0, resultado.size());
+    }
+
 
     @Test
     public void testLista() {
@@ -92,23 +121,32 @@ public class GrupoUsuarioServiceTest {
     }
 
     @Test
-    public void testRemoveComUsuarioVinculado() {
+    public void testRemoveGrupoComUsuarioVinculado() {
         when(repository.grupoTemUsuaio(1L)).thenReturn(1);
 
         String resultado = service.remove(1L, redirectAttributes);
 
         verify(redirectAttributes).addFlashAttribute(mensagemErro,
-                "Este grupo possue usuários vinculados a ele, verifique");
+                "Este grupo possui usuários vinculados a ele, verifique");
         assertEquals("redirect:/grupousuario/1", resultado);
     }
 
     @Test
-    public void testRemoveSemUsuarioVinculado() {
+    public void testRemoveGrupoSemUsuarioVinculado() {
         when(repository.grupoTemUsuaio(1L)).thenReturn(0);
 
         String resultado = service.remove(1L, redirectAttributes);
 
         verify(repository).deleteById(1L);
+        assertEquals("redirect:/grupousuario", resultado);
+    }
+
+    @Test
+    public void testRemoveGrupoErroAoDeletar() {
+        when(repository.grupoTemUsuaio(1L)).thenReturn(0);
+        doThrow(new RuntimeException()).when(repository).deleteById(1L);
+        String resultado = service.remove(1L, redirectAttributes);
+        verify(redirectAttributes).addFlashAttribute("mensagemErro", "Erro ao deletar usuario.");
         assertEquals("redirect:/grupousuario", resultado);
     }
 

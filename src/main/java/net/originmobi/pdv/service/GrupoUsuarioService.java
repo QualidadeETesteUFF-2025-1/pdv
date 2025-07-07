@@ -56,7 +56,7 @@ public class GrupoUsuarioService {
 		int aux = grupousuarios.grupoTemUsuaio(codigo);
 
 		if (aux > 0) {
-			attributes.addFlashAttribute(mensagemErro, "Este grupo possue usuários vinculados a ele, verifique");
+			attributes.addFlashAttribute(mensagemErro, "Este grupo possui usuários vinculados a ele, verifique");
 			return "redirect:/grupousuario/" + codigo;
 		}
 
