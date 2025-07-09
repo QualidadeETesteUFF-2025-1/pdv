@@ -1,0 +1,940 @@
+{
+	"info": {
+		"_postman_id": "2a85596a-c845-49e6-aa0d-891898eabac9",
+		"name": "PDV original",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20681832"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"item": [
+				{
+					"name": "Login - Sucesso",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response contains 'Usuário: gerente'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Usuário: gerente\");",
+									"});",
+									"",
+									"pm.test(\"Response contains 'Pedidos'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Pedidos\");",
+									"});",
+									"",
+									"pm.test(\"Response contains 'Total a Receber'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Total a Receber\");",
+									"});",
+									"",
+									"pm.test(\"Response contains 'NFe Emitidas'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"NFe Emitidas\");",
+									"});",
+									"",
+									"pm.test(\"Response contains 'Total a Pagar'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Total a Pagar\");",
+									"});",
+									"",
+									"pm.test(\"Response contains 'Produtos'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Produtos\");",
+									"});",
+									"",
+									"pm.test(\"Response contains 'Usuários'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Usuários\");",
+									"});",
+									"",
+									"pm.test(\"Response contains 'Configurações'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Configurações\");",
+									"});",
+									"",
+									"pm.test(\"Response contains 'Empresa'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Empresa\");",
+									"});",
+									"",
+									"pm.test(\"Response contains 'Máquina Cartão'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Máquina Cartão\");",
+									"});",
+									"",
+									"pm.test(\"Response contains 'Titulos'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Titulos\");",
+									"});",
+									"",
+									"pm.test(\"Response contains 'Pedidos em Aberto'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Pedidos em Aberto\");",
+									"});",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "gerente",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "123",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login - Falha",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Resposta contém Usuário ou senha inválidos'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Usuário ou senha inválidos\");",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "gerente",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "121332",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Criar Pedido",
+			"item": [
+				{
+					"name": "Login - Sucesso",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Código de status é 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Resposta contém 'Usuário: gerente'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Usuário: gerente\");",
+									"});",
+									"",
+									"pm.test(\"Resposta contém 'Pedidos'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Pedidos\");",
+									"});",
+									"",
+									"pm.test(\"Resposta contém 'Total a Receber'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Total a Receber\");",
+									"});",
+									"",
+									"pm.test(\"Resposta contém 'NFe Emitidas'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"NFe Emitidas\");",
+									"});",
+									"",
+									"pm.test(\"Resposta contém 'Total a Pagar'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Total a Pagar\");",
+									"});",
+									"",
+									"pm.test(\"Resposta contém 'Produtos'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Produtos\");",
+									"});",
+									"",
+									"pm.test(\"Resposta contém 'Usuários'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Usuários\");",
+									"});",
+									"",
+									"pm.test(\"Resposta contém 'Configurações'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Configurações\");",
+									"});",
+									"",
+									"pm.test(\"Resposta contém 'Empresa'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Empresa\");",
+									"});",
+									"",
+									"pm.test(\"Resposta contém 'Máquina Cartão'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Máquina Cartão\");",
+									"});",
+									"",
+									"pm.test(\"Resposta contém 'Titulos'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Titulos\");",
+									"});",
+									"",
+									"pm.test(\"Resposta contém 'Pedidos em Aberto'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Pedidos em Aberto\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "gerente",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "123",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Criar Pedido",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Checa se 'ABERTA' está presente no corpo da resposta\", function () {",
+									"    pm.expect(pm.response.text()).to.include('ABERTA');",
+									"});",
+									"",
+									"pm.test(\"Checa se 'Teste de integracao' está presente no corpo da resposta\", function () {",
+									"    pm.expect(pm.response.text()).to.include('Teste de integracao');",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "pessoa",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "observacao",
+									"value": "Teste de integracao",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/venda",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"venda"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Pagamentos e Recebimentos",
+			"item": [
+				{
+					"name": "Criar Pagamento",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code é 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Resposta contém 'Despesa lançada com sucesso' no corpo da resposta\", function () {",
+									"    let responseText = pm.response.text();",
+									"    pm.expect(responseText.includes('Despesa lançada com sucesso')).to.be.true;",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "fornecedor",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "tipo",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "valor",
+									"value": "100.00",
+									"type": "text"
+								},
+								{
+									"key": "obs",
+									"value": "Teste de pagamento",
+									"type": "text"
+								},
+								{
+									"key": "vencimento",
+									"value": "20/12/2024",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/pagar",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"pagar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Criar Pagamento - Dados Inválidos",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code é 500\", function () {",
+									"    pm.response.to.have.status(500);",
+									"});",
+									"pm.test(\"Resposta contem a mensagem 'Fornecedor não encontrado'\", function () {",
+									"    let responseText = pm.response.text();",
+									"    pm.expect(responseText.includes('Fornecedor não encontrado')).to.be.true;",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "fornecedor",
+									"value": "999999",
+									"type": "text"
+								},
+								{
+									"key": "tipo",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "valor",
+									"value": "-100.00",
+									"type": "text"
+								},
+								{
+									"key": "obs",
+									"value": "Teste pagamento inválido",
+									"type": "text"
+								},
+								{
+									"key": "vencimento",
+									"value": "21/08/2025",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/pagar",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"pagar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Quitar Pagamento - Parcela Inexistente",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code é 500\", function () {",
+									"    pm.response.to.have.status(500);",
+									"});",
+									"pm.test(\"Resposta contém Parcela não encontrada\", function () {",
+									"    let responseText = pm.response.text();",
+									"    pm.expect(responseText.includes('Parcela não encontrada')).to.be.true;",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "parcela",
+									"value": "999999",
+									"type": "text"
+								},
+								{
+									"key": "caixa",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "vlpago",
+									"value": "100.00",
+									"type": "text"
+								},
+								{
+									"key": "desconto",
+									"value": "0.00",
+									"type": "text"
+								},
+								{
+									"key": "acrescimo",
+									"value": "0.00",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/pagar/quitar",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"pagar",
+								"quitar"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Caixa",
+			"item": [
+				{
+					"name": "Login - Sucesso",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Código de status é 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Resposta contém 'Usuário: gerente'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Usuário: gerente\");",
+									"});",
+									"",
+									"pm.test(\"Resposta contém 'Pedidos'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Pedidos\");",
+									"});",
+									"",
+									"pm.test(\"Resposta contém 'Total a Receber'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Total a Receber\");",
+									"});",
+									"",
+									"pm.test(\"Resposta contém 'NFe Emitidas'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"NFe Emitidas\");",
+									"});",
+									"",
+									"pm.test(\"Resposta contém 'Total a Pagar'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Total a Pagar\");",
+									"});",
+									"",
+									"pm.test(\"Resposta contém 'Produtos'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Produtos\");",
+									"});",
+									"",
+									"pm.test(\"Resposta contém 'Usuários'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Usuários\");",
+									"});",
+									"",
+									"pm.test(\"Resposta contém 'Configurações'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Configurações\");",
+									"});",
+									"",
+									"pm.test(\"Resposta contém 'Empresa'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Empresa\");",
+									"});",
+									"",
+									"pm.test(\"Resposta contém 'Máquina Cartão'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Máquina Cartão\");",
+									"});",
+									"",
+									"pm.test(\"Resposta contém 'Titulos'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Titulos\");",
+									"});",
+									"",
+									"pm.test(\"Resposta contém 'Pedidos em Aberto'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Pedidos em Aberto\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "gerente",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "123",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Criar Caixa",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code é 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Resposta não está vazia\", function () {",
+									"    pm.expect(pm.response.text()).to.not.be.empty;",
+									"});",
+									"",
+									"pm.test(\"Resposta contém informações do cabeçalho Location\", function () {",
+									"    const textoResposta = pm.response.text();",
+									"    pm.expect(textoResposta).to.include(\"Location\");",
+									"    pm.expect(textoResposta).to.include(\"/caixa/gerenciar/\");",
+									"});",
+									"",
+									"pm.test(\"Resposta contém ID do caixa no final\", function () {",
+									"    const textoResposta = pm.response.text();",
+									"    const idEncontrado = textoResposta.match(/(\\d+)$/);",
+									"    ",
+									"    pm.expect(idEncontrado).to.not.be.null;",
+									"    pm.expect(idEncontrado[1]).to.match(/^\\d+$/);",
+									"    ",
+									"    if (idEncontrado && idEncontrado[1]) {",
+									"        pm.globals.set(\"id_caixa_criado\", idEncontrado[1]);",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Formato da resposta está correto\", function () {",
+									"    const textoResposta = pm.response.text();",
+									"    pm.expect(textoResposta).to.match(/\\{.*Location=\\[.*\\/caixa\\/gerenciar\\/.*\\].*\\}\\d+$/);",
+									"});",
+									"",
+									"pm.test(\"Cabeçalho Content-Type está presente\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Resposta contém estrutura de cabeçalho esperada\", function () {",
+									"    const textoResposta = pm.response.text();",
+									"    pm.expect(textoResposta).to.match(/\\{Location=\\[http:\\/\\/.*\\/caixa\\/gerenciar\\/\\]\\}\\d+/);",
+									"});",
+									"",
+									"pm.test(\"URL de redirecionamento está correta\", function () {",
+									"    const textoResposta = pm.response.text();",
+									"    const urlMatch = textoResposta.match(/Location=\\[(http:\\/\\/.*\\/caixa\\/gerenciar\\/)\\]/);",
+									"    ",
+									"    pm.expect(urlMatch).to.not.be.null;",
+									"    if (urlMatch && urlMatch[1]) {",
+									"        pm.expect(urlMatch[1]).to.include(\"localhost:8080\");",
+									"        pm.expect(urlMatch[1]).to.include(\"/caixa/gerenciar/\");",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Descrição do caixa foi processada corretamente\", function () {",
+									"    const descricaoEnviada = pm.request.body.urlencoded.find(param => param.key === \"descricao\");",
+									"    ",
+									"    if (descricaoEnviada && descricaoEnviada.value) {",
+									"        pm.expect(descricaoEnviada.value).to.not.be.empty;",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Tipo de caixa é válido\", function () {",
+									"    const tipoEnviado = pm.request.body.urlencoded.find(param => param.key === \"tipo\");",
+									"    ",
+									"    if (tipoEnviado && tipoEnviado.value) {",
+									"        pm.expect([\"CAIXA\", \"COFRE\", \"BANCO\"]).to.include(tipoEnviado.value);",
+									"    }",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "descricao",
+									"value": "Caixa Principal",
+									"type": "text"
+								},
+								{
+									"key": "tipo",
+									"value": "CAIXA",
+									"type": "text"
+								},
+								{
+									"key": "valor_abertura",
+									"value": "100,00",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/caixa",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"caixa"
+							]
+						},
+						"description": "Generated from cURL: curl -X POST \\\n  http://localhost:8080/caixa \\\n  -H 'Content-Type: application/x-www-form-urlencoded' \\\n  -d 'descricao=Caixa Principal&tipo=CAIXA&valor_abertura=100,00'"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Empresa",
+			"item": [
+				{
+					"name": "Login - Sucesso",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response contains 'Usuário: gerente'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Usuário: gerente\");",
+									"});",
+									"",
+									"pm.test(\"Response contains 'Pedidos'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Pedidos\");",
+									"});",
+									"",
+									"pm.test(\"Response contains 'Total a Receber'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Total a Receber\");",
+									"});",
+									"",
+									"pm.test(\"Response contains 'NFe Emitidas'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"NFe Emitidas\");",
+									"});",
+									"",
+									"pm.test(\"Response contains 'Total a Pagar'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Total a Pagar\");",
+									"});",
+									"",
+									"pm.test(\"Response contains 'Produtos'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Produtos\");",
+									"});",
+									"",
+									"pm.test(\"Response contains 'Usuários'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Usuários\");",
+									"});",
+									"",
+									"pm.test(\"Response contains 'Configurações'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Configurações\");",
+									"});",
+									"",
+									"pm.test(\"Response contains 'Empresa'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Empresa\");",
+									"});",
+									"",
+									"pm.test(\"Response contains 'Máquina Cartão'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Máquina Cartão\");",
+									"});",
+									"",
+									"pm.test(\"Response contains 'Titulos'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Titulos\");",
+									"});",
+									"",
+									"pm.test(\"Response contains 'Pedidos em Aberto'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Pedidos em Aberto\");",
+									"});",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "gerente",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "123",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Acessar Formulário Empresa",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Código de status é 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Resposta contém 'Parâmetros Empresa'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Parâmetros Empresa\");",
+									"});",
+									"",
+									"pm.test(\"Resposta contém 'Usuário: gerente'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Usuário: gerente\");",
+									"});",
+									"",
+									"pm.test(\"Resposta contém campos de formulário para Nome\", function () {",
+									"    pm.expect(pm.response.text()).to.include('name=\"nome\"');",
+									"});",
+									"",
+									"pm.test(\"Resposta contém campos de formulário para Nome Fantasia\", function () {",
+									"    pm.expect(pm.response.text()).to.include('name=\"nome_fantasia\"');",
+									"});",
+									"",
+									"pm.test(\"Resposta contém campos de formulário para CNPJ\", function () {",
+									"    pm.expect(pm.response.text()).to.include('name=\"cnpj\"');",
+									"});",
+									"",
+									"pm.test(\"Resposta contém campos de formulário para IE\", function () {",
+									"    pm.expect(pm.response.text()).to.include('name=\"ie\"');",
+									"});",
+									"",
+									"pm.test(\"Resposta contém aba para Empresa\", function () {",
+									"    pm.expect(pm.response.text()).to.include('#empresa');",
+									"});",
+									"",
+									"pm.test(\"Resposta contém aba para Endereço\", function () {",
+									"    pm.expect(pm.response.text()).to.include('#endereco');",
+									"});",
+									"",
+									"pm.test(\"Resposta contém aba para Fiscal\", function () {",
+									"    pm.expect(pm.response.text()).to.include('#fiscal');",
+									"});",
+									"",
+									"pm.test(\"Resposta contém opções de Regime Tributário\", function () {",
+									"    pm.expect(pm.response.text()).to.include('Simples Nacional');",
+									"});",
+									"",
+									"pm.test(\"Resposta contém botão de envio\", function () {",
+									"    pm.expect(pm.response.text()).to.include('value=\"Salvar\"');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/empresa",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"empresa"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "lastDigit",
+			"value": ""
+		}
+	]
+}
