@@ -36,36 +36,67 @@ public class TransferenciaServiceTest {
     public void setUp() {
     }
 
-@Test
-public void testCadastrarComSucesso() {
-    Double valor = 100.0;
-    Long origemId = 1L;
-    Long destinoId = 2L;
+    @Test
+    public void testCadastrarComSucesso() {
+        Double valor = 100.0;
+        Long origemId = 1L;
+        Long destinoId = 2L;
 
-    Usuario usuario = new Usuario();
-    Caixa origem = new Caixa();
-    origem.setCodigo(origemId);
-    origem.setDescricao("Caixa Origem");
-    origem.setValor_total(200.0);
-    origem.setData_fechamento(null);
+        Caixa origem = new Caixa();
+        origem.setCodigo(origemId);
+        origem.setDescricao("Caixa Origem");
+        origem.setValor_total(200.0);
+        origem.setData_fechamento(null);
 
-    Caixa destino = new Caixa();
-    destino.setCodigo(destinoId);
-    destino.setDescricao("Caixa Destino");
-    destino.setValor_total(300.0);
-    destino.setData_fechamento(null);
+        Caixa destino = new Caixa();
+        destino.setCodigo(destinoId);
+        destino.setDescricao("Caixa Destino");
+        destino.setValor_total(300.0);
+        destino.setData_fechamento(null);
 
-    Aplicacao instancia = mock(Aplicacao.class);
-    mockAplicacaoSingleton(instancia);
+        Aplicacao instancia = mock(Aplicacao.class);
+        mockAplicacaoSingleton(instancia);
 
-    when(caixas.busca(origemId)).thenReturn(Optional.of(origem));
-    when(caixas.busca(destinoId)).thenReturn(Optional.of(destino));
+        when(caixas.busca(origemId)).thenReturn(Optional.of(origem));
+        when(caixas.busca(destinoId)).thenReturn(Optional.of(destino));
 
-    String resultado = transferenciaService.cadastrar(valor, origemId, destinoId, "Obs");
+        String resultado = transferenciaService.cadastrar(valor, origemId, destinoId, "Obs");
 
-    assertEquals("Transferência realizada com sucesso", resultado);
-    verify(transferencias).save(any(Transferencia.class));
-}
+        assertEquals("Transferência realizada com sucesso", resultado);
+        verify(transferencias).save(any(Transferencia.class));
+
+        assertEquals(Double.valueOf(100.0), origem.getValor_total());
+        assertEquals(Double.valueOf(400.0), destino.getValor_total());
+    }
+
+    @Test
+    public void testTransferenciaComSaldoExato() {
+        Double valor = 100.0;
+        Long origemId = 1L;
+        Long destinoId = 2L;
+
+        Caixa origem = new Caixa();
+        origem.setCodigo(origemId);
+        origem.setValor_total(100.0);
+        origem.setData_fechamento(null);
+
+        Caixa destino = new Caixa();
+        destino.setCodigo(destinoId);
+        destino.setValor_total(50.0);
+        destino.setData_fechamento(null);
+
+        Aplicacao instancia = mock(Aplicacao.class);
+        mockAplicacaoSingleton(instancia);
+
+        when(caixas.busca(origemId)).thenReturn(Optional.of(origem));
+        when(caixas.busca(destinoId)).thenReturn(Optional.of(destino));
+
+        String resultado = transferenciaService.cadastrar(valor, origemId, destinoId, "Obs");
+
+        assertEquals("Transferência realizada com sucesso", resultado);
+        assertEquals(Double.valueOf(0.0), origem.getValor_total());
+        assertEquals(Double.valueOf(150.0), destino.getValor_total());
+    }
 
     @Test(expected = RuntimeException.class)
     public void testDestinoIgualOrigem() {
@@ -80,7 +111,25 @@ public void testCadastrarComSucesso() {
         origem.setData_fechamento(new Timestamp(System.currentTimeMillis()));
         Caixa destino = new Caixa();
 
+        when(caixas.busca(1L)).thenReturn(Optional.of(origem));
+        when(caixas.busca(2L)).thenReturn(Optional.of(destino));
+
         transferenciaService.cadastrar(100.0, 1L, 2L, "Obs");
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testDestinoFechado() {
+        Caixa origem = new Caixa();
+        origem.setValor_total(200.0);
+        origem.setData_fechamento(null);
+
+        Caixa destino = new Caixa();
+        destino.setData_fechamento(new Timestamp(System.currentTimeMillis()));
+
+        when(caixas.busca(1L)).thenReturn(Optional.of(origem));
+        when(caixas.busca(2L)).thenReturn(Optional.of(destino));
+
+        transferenciaService.cadastrar(50.0, 1L, 2L, "Obs");
     }
 
     @Test(expected = RuntimeException.class)
@@ -94,6 +143,7 @@ public void testCadastrarComSucesso() {
 
         when(caixas.busca(1L)).thenReturn(Optional.of(origem));
         when(caixas.busca(2L)).thenReturn(Optional.of(destino));
+
         transferenciaService.cadastrar(100.0, 1L, 2L, "Obs");
     }
 
@@ -103,7 +153,6 @@ public void testCadastrarComSucesso() {
         Long origemId = 1L;
         Long destinoId = 2L;
 
-        Usuario usuario = new Usuario();
         Caixa origem = new Caixa();
         origem.setValor_total(200.0);
         origem.setData_fechamento(null);
@@ -117,7 +166,95 @@ public void testCadastrarComSucesso() {
         when(caixas.busca(origemId)).thenReturn(Optional.of(origem));
         when(caixas.busca(destinoId)).thenReturn(Optional.of(destino));
 
+        doThrow(new RuntimeException("Erro no save")).when(transferencias).save(any(Transferencia.class));
+
         transferenciaService.cadastrar(valor, origemId, destinoId, "Obs");
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testCaixaOrigemInexistente() {
+        when(caixas.busca(1L)).thenReturn(Optional.empty());
+        transferenciaService.cadastrar(50.0, 1L, 2L, "Obs");
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testCaixaDestinoInexistente() {
+        Caixa origem = new Caixa();
+        origem.setValor_total(200.0);
+        origem.setData_fechamento(null);
+
+        when(caixas.busca(1L)).thenReturn(Optional.of(origem));
+        when(caixas.busca(2L)).thenReturn(Optional.empty());
+
+        transferenciaService.cadastrar(50.0, 1L, 2L, "Obs");
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testTransferenciaComValorZero() {
+        transferenciaService.cadastrar(0.0, 1L, 2L, "Obs");
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testTransferenciaComValorNegativo() {
+        transferenciaService.cadastrar(-50.0, 1L, 2L, "Obs");
+    }
+
+    @Test
+    public void testTransferenciaComObservacaoNula() {
+        Double valor = 50.0;
+        Long origemId = 1L;
+        Long destinoId = 2L;
+
+        Caixa origem = new Caixa();
+        origem.setCodigo(origemId);
+        origem.setValor_total(200.0);
+        origem.setData_fechamento(null);
+
+        Caixa destino = new Caixa();
+        destino.setCodigo(destinoId);
+        destino.setValor_total(100.0);
+        destino.setData_fechamento(null);
+
+        Aplicacao instancia = mock(Aplicacao.class);
+        mockAplicacaoSingleton(instancia);
+
+        when(caixas.busca(origemId)).thenReturn(Optional.of(origem));
+        when(caixas.busca(destinoId)).thenReturn(Optional.of(destino));
+
+        String resultado = transferenciaService.cadastrar(valor, origemId, destinoId, null);
+
+        assertEquals("Transferência realizada com sucesso", resultado);
+        assertEquals(Double.valueOf(150.0), destino.getValor_total());
+        assertEquals(Double.valueOf(150.0), origem.getValor_total());
+    }
+
+    @Test
+    public void testTransferenciaComValorDecimal() {
+        Double valor = 0.3333333333333;
+        Long origemId = 1L;
+        Long destinoId = 2L;
+
+        Caixa origem = new Caixa();
+        origem.setCodigo(origemId);
+        origem.setValor_total(1.0);
+        origem.setData_fechamento(null);
+
+        Caixa destino = new Caixa();
+        destino.setCodigo(destinoId);
+        destino.setValor_total(0.0);
+        destino.setData_fechamento(null);
+
+        Aplicacao instancia = mock(Aplicacao.class);
+        mockAplicacaoSingleton(instancia);
+
+        when(caixas.busca(origemId)).thenReturn(Optional.of(origem));
+        when(caixas.busca(destinoId)).thenReturn(Optional.of(destino));
+
+        String resultado = transferenciaService.cadastrar(valor, origemId, destinoId, "Obs");
+
+        assertEquals("Transferência realizada com sucesso", resultado);
+        assertEquals(Double.valueOf(1.0 - valor), origem.getValor_total());
+        assertEquals(Double.valueOf(0.0 + valor), destino.getValor_total());
     }
 
     private void mockAplicacaoSingleton(Aplicacao instanciaMock) {
