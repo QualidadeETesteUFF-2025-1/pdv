@@ -36,8 +36,11 @@ public class CaixaLancamentoService {
 		try {
 			lancamento.setData_cadastro(dataHoraAtual);
 
-			if (!lancamento.getCaixa().isPresent()
-					&& lancamento.getCaixa().map(Caixa::getData_fechamento).isPresent()) {
+			if (!lancamento.getCaixa().isPresent()) {
+				throw new RuntimeException("Nenhum caixa informado");
+			}
+			
+			if (lancamento.getCaixa().map(Caixa::getData_fechamento).isPresent()) {
 				throw new RuntimeException("Nenhum caixa aberto");
 			}
 

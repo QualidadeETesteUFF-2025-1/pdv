@@ -205,4 +205,21 @@ public class CaixaLancamentoServiceTest {
         
         verify(caixaLancamentoRepository, times(1)).findByCaixaEquals(caixa);
     }
-} 
+    
+    @Test
+    public void shouldAllowSaidaWhenValueIsEqualToBalance() {
+        caixa.setValor_total(1000.0);
+        lancamento.setCaixa(caixa);
+        lancamento.setEstilo(EstiloLancamento.SAIDA);
+        lancamento.setTipo(TipoLancamento.SANGRIA);
+        lancamento.setValor(1000.0); // valor igual ao saldo
+    
+        when(caixaLancamentoRepository.save(any(CaixaLancamento.class))).thenReturn(lancamento);
+    
+        String resultado = caixaLancamentoService.lancamento(lancamento);
+    
+        assertEquals("Lançamento realizado com sucesso", resultado);
+        verify(caixaLancamentoRepository, times(1)).save(any(CaixaLancamento.class));
+    }
+}
+
