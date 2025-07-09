@@ -46,7 +46,7 @@ public class CaixaLancamentoService {
 			if (lancamento.getEstilo().equals(EstiloLancamento.SAIDA)) {
 				Optional<Double> vlTotalCaixa = lancamento.getCaixa().map(Caixa::getValor_total);
 				
-				if (lancamento.getValor() > vlTotalCaixa.get()) {
+				if ( vlTotalCaixa.isPresent() && lancamento.getValor() > vlTotalCaixa.get()) {
 					return "Saldo insuficiente para realizar esta operação";
 				}
 			}

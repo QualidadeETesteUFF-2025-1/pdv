@@ -414,8 +414,6 @@ public class EmpresaServiceTest {
         when(parametros.save(any(EmpresaParametro.class))).thenReturn(new EmpresaParametro());
         when(enderecos.cadastrar(any(Endereco.class))).thenReturn(new Endereco());
         when(empresas.save(any(Empresa.class))).thenReturn(new Empresa());
-    }
-}
         dto.setAmbiente(2);
         dto.setCodRegime(1L);
         dto.setCodCidade(1L);
@@ -426,14 +424,5 @@ public class EmpresaServiceTest {
         dto.setCep("12345-678");
         dto.setReferencia("Referência");
         dto.setAliqCalcCredito(5.0);
-        return dto;
-    }
-    
-    private void configurarMocksParaSucesso(EmpresaDTO dto) {
-        when(regimes.busca(dto.getCodRegime())).thenReturn(Optional.of(new RegimeTributario()));
-        when(cidades.busca(dto.getCodCidade())).thenReturn(Optional.of(new Cidade()));
-        when(parametros.save(any(EmpresaParametro.class))).thenReturn(new EmpresaParametro());
-        when(enderecos.cadastrar(any(Endereco.class))).thenReturn(new Endereco());
-        when(empresas.save(any(Empresa.class))).thenReturn(new Empresa());
     }
 }
