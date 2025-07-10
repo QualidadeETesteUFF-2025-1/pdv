@@ -135,7 +135,8 @@ Para logar no sistema, use o usuário "gerente" e a senha "123".
     - src/test/java/net/originmobi/pdv/selenium/python/AdicionarFornecedorTest.py
 
 3. Testes de integração:
-![Alt text](./entrega2/Carrambert%20-%20Postman.png "a title")
+
+    ![Alt text](./entrega2/Carrambert%20-%20Postman.png "a title")
 
 4. Correção dos bugs do sonar:
 
